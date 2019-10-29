@@ -52,6 +52,7 @@ router.put("/:id", (req, res) => {
       .status(400)
       .json({ error: "Error, must include title and contents" });
   }
+  dd;
   console.log(req.body);
   db.update(id, { title, contents })
     .then(updated => {
@@ -68,6 +69,39 @@ router.put("/:id", (req, res) => {
     .catch(err => {
       console.log(err);
       res.status(500).json({ error: "Error updating post" });
+    });
+});
+router.delete("/:id", (req, res) => {
+  const { id } = req.params;
+
+  db.remove(id)
+    .then(removed => {
+      if (removed) {
+        res.status(204).end();
+      } else {
+        res.status(404).json({ error: "Post with id does not exist" });
+      }
+    })
+    .catch(err => {
+      console.log("delete", err);
+      res.status(500).json({ error: "Error deleting post" });
+    });
+});
+router.get("/:post_id/comments", (req, res) => {
+  const { post_id } = req.params;
+  db.findById(post_id)
+    .then(([post]) => {
+      if (post) {
+        db.findPostComments(post_id).then(comments => {
+          res.status(200).json(comments);
+        });
+      } else {
+        res.status(404).json({ error: "Post with id does not exist" });
+      }
+    })
+    .catch(err => {
+      console.log("get comments", err);
+      res.status(500).json({ error: "Error getting post comments" });
     });
 });
 module.exports = router;
