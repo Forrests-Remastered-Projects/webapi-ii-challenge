@@ -52,7 +52,6 @@ router.put("/:id", (req, res) => {
       .status(400)
       .json({ error: "Error, must include title and contents" });
   }
-  dd;
   console.log(req.body);
   db.update(id, { title, contents })
     .then(updated => {
