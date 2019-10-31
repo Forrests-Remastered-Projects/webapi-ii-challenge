@@ -14,7 +14,7 @@ router.get("/", (req, res) => {
 router.post("/", (req, res) => {
   const { title, contents } = req.body;
   if (!title || !contents) {
-    return res.status(400).json({ error: "Error with Title/Contents" });
+    return res.status(400).json({ error: "Must include Title/Contents" });
   }
   db.insert({ title, contents })
     .then(({ id }) => {
